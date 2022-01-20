@@ -1,4 +1,4 @@
-const input = require('fs').readFileSync('./input1.txt').toString().trim().split('\n');
+const input = require('fs').readFileSync('./law_of_big_number_input1.txt').toString().trim().split('\n');
 const [n, m, k] = input[0].split(' ').map(n => parseInt(n));
 const arr = input[1].split(' ').map(n => parseInt(n));
 arr.sort((a,b) => b - a);
