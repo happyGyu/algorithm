@@ -1,28 +1,27 @@
+const bonusObj = {'S':1, 'D':2, 'T':3};
+const optionObj = {'*':2, '#':-1};
+
 function solution(dartResult) {
-    let answer = 0;
-    let prev = 0;
-    let curr = 0;
+    const handledResult = dartResult.replace(/10/gi,'X') + '0'
     let pointer = 0;
-    const multiplierDic = {'S':1, 'D':2, 'T':3};
-    const optionDic = {'*':2, '#': -1, 'null':1};
-    
-    while (pointer < dartResult.length) {
-        const temp = +dartResult[pointer];
-        const multiplier = dartResult[pointer + 1];
-        let option;
-        if (['*','#'].includes(dartResult[pointer + 2])) {
-            option = dartResult[pointer + 2];
-            pointer += 3;
-        } else {
-            option = 'null';
-            pointer += 2;
+    let prevScore = 0;
+    let total = 0;
+    for (let i = 0; i < handledResult.length; i++) {
+        if (!isNaN(handledResult[i + 1]) || handledResult[i + 1] === 'X') {
+            const curr = handledResult.slice(pointer, i + 1);
+            pointer = i + 1;
+            [total, prevScore] = calScore(curr, prevScore, total);
         }
-        console.log(temp, multiplier, option)
-        curr = temp**(multiplierDic[multiplier])*(optionDic[option]);
-        answer += curr;
-        if (option === '*') answer += prev;
-        prev = curr;
-        console.log(answer);
     }
-    return answer;
+    return total;
+}
+
+function calScore(curr, prevScore, total) {
+    const base = (curr[0] === 'X')? 10 : curr[0];
+    const bonus = bonusObj[curr[1]];
+    const option = optionObj[curr[2]] === undefined? 1 : optionObj[curr[2]];
+    const currScore = base**(bonus) * (option);
+    let newTotal = total + currScore;
+    if (option == '2') newTotal += prevScore;
+    return [newTotal, currScore];
 }
