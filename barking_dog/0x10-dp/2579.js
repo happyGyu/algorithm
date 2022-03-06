@@ -10,3 +10,5 @@ for (let i= 2; i <= stairNum; i++) {
     dp[i][2] = dp[i - 1][1] + scores[i];
 }
 console.log(Math.max(dp[stairNum][1],dp[stairNum][2]));
+
+//2차원 배열말고 다른 방식으로 하면 1차원 배열로도 풀수 있대! 뭘까?
