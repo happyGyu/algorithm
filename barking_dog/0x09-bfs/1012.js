@@ -14,7 +14,7 @@ function calAnswer(divider) {
     while (testCase.length !== 0) {
         const queue = [testCase.pop()];
         while (queue.length !== 0) {
-            const curr = queue.shift();
+            const curr = queue.pop();
             for (let dir = 0; dir < 4; dir++) {
                 const tempX = curr[0] + dx[dir];
                 const tempY = curr[1] + dy[dir];
