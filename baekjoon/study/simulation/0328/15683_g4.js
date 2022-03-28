@@ -11,18 +11,17 @@ const input = require("fs")
     );
 const [height, width] = input[0];
 const map = input.slice(1);
-const resultMap = Array.from({ length: height }, () => Array.from({ length: width }, () => 1));
-const cctvInfos = [];
 
+const wallAndCCTVs = [];
+const cctvInfos = [];
 for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
         if (map[i][j] === 0) {
             continue;
         } else if (map[i][j] === 6) {
-            //여기 안에 아무것도 안둬도 되나?
-            resultMap[i][j] = 0;
+            wallAndCCTVs.push([i,j]);
         } else {
-            resultMap[i][j] = 0;
+            wallAndCCTVs.push([i,j]);
             const cctvInfo = { type: map[i][j], pos: [i, j] };
             cctvInfos.push(cctvInfo);
         }
@@ -51,39 +50,55 @@ const cctvDirOptions = {
     5: [[0, 1, 2, 3]],
 };
 
-for (const cctvInfo of cctvInfos) {
-    for (const cctvDirOption of cctvDirOptions[cctvInfo.type]) {
+let answer = 0;
+const totalCaseNum = cctvInfos.length > 0 ? 4 ** cctvInfos.length : 0;
+if (totalCaseNum === 0) {
+    answer = wallAndCCTVs.length;
+}
+for (let i = 0; i < totalCaseNum; i++) {
+    const watchedSet = new Set();
+    const testCase = i.toString(4).padStart(cctvInfos.length, '0');
+    for (let j = 0; j < testCase.length; j++) {
+        const cctv = cctvInfos[j]; 
+        const directions = cctvDirOptions[cctv.type][testCase[j]];
+        if (directions === undefined) break; 
+        checkCCTVDir(watchedSet, cctv.pos, directions);
     }
+    wallAndCCTVs.forEach(posArr => watchedSet.add(posArr.toString()))
+    answer = Math.max(watchedSet.size, answer);
+}
+console.log(width * height - answer)
+
+
+
+function checkCCTVDir(watchedSet, pos, directions) {
+    directions.forEach((directionNum) => checkOneDir(watchedSet, pos, directionNum));
 }
 
-function checkCCTVDir(tempResultMap, pos, directions) {
-    directions.forEach((directionNum) => checkOneDir(tempResultMap, pos, directionNum));
-}
-
-function checkOneDir(tempResultMap, pos, directionNum) {
+function checkOneDir(watchedSet, pos, directionNum) {
     let [y, x] = pos;
     if (directions[directionNum] === "right") {
         x++;
         while (x < width && map[y][x] !== 6) {
-            tempResultMap[y][x] = 0;
+            watchedSet.add([y,x].toString());
             x++;
         }
     } else if (directions[directionNum] === "left") {
         x--;
         while (x >= 0 && map[y][x] !== 6) {
-            tempResultMap[y][x] = 0;
+            watchedSet.add([y,x].toString());
             x--;
         }
     } else if (directions[directionNum] === "up") {
         y--;
         while (y >= 0 && map[y][x] !== 6) {
-            tempResultMap[y][x] = 0;
+            watchedSet.add([y,x].toString());
             y--;
         }
     } else if (directions[directionNum] === "down") {
         y++;
         while (y < height && map[y][x] !== 6) {
-            tempResultMap[y][x] = 0;
+            watchedSet.add([y,x].toString());
             y++;
         }
     }
