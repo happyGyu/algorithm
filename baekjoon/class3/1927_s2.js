@@ -19,20 +19,12 @@ for (let i = 1; i < input.length; i++) {
 }
 console.log(answer);
 
-// const test = [1, 6, 2, 9, 10, 2, 3, 5, 6, 8, 19, 2, 4];
-// const heap = [0];
-// for (let i = 1; i < test.length; i++) {
-//   heap.push(test[i]);
-//   organizeFromTheBottom(i);
-//   console.log(heap);
-// }
-
 function organizeFromTheBottom(i) {
   if (heap[i] < heap[parseInt(i / 2)]) {
     const smaller = heap[i];
     heap[i] = heap[parseInt(i / 2)];
     heap[parseInt(i / 2)] = smaller;
-    organizeFromTheBottom(i);
+    organizeFromTheBottom(parseInt(i / 2));
   }
 }
 
@@ -45,10 +37,18 @@ function getSmallest(heap) {
 }
 
 function organizeFromTheTop(i) {
-  const [smaller, idx] = heap[2 * i] <= heap[2 * i + 1] ? [heap[2 * i], 2 * i] : [heap[2 * i + 1], 2 * i + 1];
+  if (!heap[2 * i]) return;
+  let smaller;
+  let idx;
+  if (!heap[2 * i + 1]) {
+    [smaller, idx] = [heap[2 * i], 2 * i];
+  } else {
+    [smaller, idx] = heap[2 * i] <= heap[2 * i + 1] ? [heap[2 * i], 2 * i] : [heap[2 * i + 1], 2 * i + 1];
+  }
   if (heap[i] > smaller) {
     heap[idx] = heap[i];
     heap[i] = smaller;
     organizeFromTheTop(idx);
   }
 }
+
