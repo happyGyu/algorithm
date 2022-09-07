@@ -9,7 +9,7 @@ for (let i = 0; i < timeArr.length; i++) {
     young += (Math.floor(timeArr[i] / 30) + 1) * 10;
     min += (Math.floor(timeArr[i] / 60) + 1) * 15;
 }
-// 문제 조건을 잘 읽자! 내 고정관념대로 하면 쉬운 문제여도 틀려!
+// 문제 조건을 잘 읽자! 내 고정관념대로 하면 쉬운 문제여도 틀려!g
 
 if (young > min) console.log(`M ${min}`);
 else if (young < min) console.log(`Y ${young}`);
